@@ -1,22 +1,20 @@
-from .models import Article
-from django.shortcuts import render, redirect
+from articles.models import Article
+from django.shortcuts import render
 from django.http import Http404
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
 
+def archive(request):
+    return render(request, 'templates/archive.html')
 
-# Create your views here.
 def archive(request):
     return render(request, 'archive.html', {"posts": Article.objects.all()})
 
 def get_article(request, article_id):
-    # get one exact view
     try:
         post = Article.objects.get(id=article_id)
         return render(request, 'article.html', {"post": post})
     except Article.DoesNotExist:
         raise Http404
-
 
 def create_post(request):
     if not request.user.is_anonymous:
@@ -29,7 +27,6 @@ def create_post(request):
             if form["text"] and form["title"]:
         # если поля заполнены без ошибок проверяем уникальна ли статья
                 if_article_unique = Article.objects.filter(title=form["title"])
-                breakpoint()
                 if len(if_article_unique) == 0:
                     article = Article.objects.create(text=form["text"], title=form["title"], author=request.user)
                     return redirect('get_article', article_id=article.id)
@@ -111,10 +108,4 @@ def login_user(request):
             return render(request, 'login.html', {})
     else:
         return render(request, 'archive.html', {})
-
-def log_out(request):
-    if not request.user.is_anonymous:
-        logout(request)
-        return redirect('archive', {"posts": Article.objects.all()})
-    else:
-        raise Http404
+# Create your views here.

@@ -10,17 +10,6 @@
     <div class="header">
         <img src="{{ STATIC_URL }}/static/img/Kiany.jpg" alt="Kiany" id="Kiany">
     </div>
-    </div>
-    <h4>
-        <!-- {% if  user.is_authenticated %} -->
-                <a href="/articles/new/"><h4 class="post-title">Создать новую статью</h4></a>
-                <a href="/logout/"><h4 class="post-title"> Выйти из аккаунта</h4></a>
-            <!-- {% else %} -->
-                <a href="/register/"><h4 class="post-title">Регистрация</h4></a>
-                <a href="/login/"><h4 class="post-title">Войти</h4></a>
-        <!-- {% endif %} -->
-        
-    </h4>
     <div class="archive">
         {% for post in posts %}
         <div class="one-post">
@@ -34,6 +23,9 @@
             <p class="article-text">{{ post.get_excerpt }}</p>
         </div>
         {% endfor %}
+        <p>
+        <div class="article-author"><a href="/articles/new/">Написать новую статью</a></div>
+        </p>
     </div>
 
 
