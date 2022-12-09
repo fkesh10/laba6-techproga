@@ -2,7 +2,7 @@ from .models import Article
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 # Create your views here.
@@ -111,3 +111,10 @@ def login_user(request):
             return render(request, 'login.html', {})
     else:
         return render(request, 'archive.html', {})
+
+def log_out(request):
+    if not request.user.is_anonymous:
+        logout(request)
+        return redirect('archive', {"posts": Article.objects.all()})
+    else:
+        raise Http404
