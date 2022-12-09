@@ -2,9 +2,11 @@ from articles.models import Article
 from django.shortcuts import render
 from django.http import Http404
 from django.shortcuts import redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
-def archive(request):
-    return render(request, 'templates/archive.html')
+# def archive(request):
+#     return render(request, 'templates/archive.html')
 
 def archive(request):
     return render(request, 'archive.html', {"posts": Article.objects.all()})
@@ -45,7 +47,7 @@ def create_post(request):
         raise Http404
 
 def register_user(request):
-    if not request.user.is_anonymous:
+    if request.user.is_anonymous:
         if request.method == "POST":
             if request.POST["username"]and request.POST["email"] and request.POST["password"]:
 
@@ -65,7 +67,7 @@ def register_user(request):
                     article = User.objects.create_user(form["username"], form["email"], form["password"])
                     # form['errors'] = u"Вы зарегистрированы! Теперь войдите в систему"
                     # return render(request, 'login.html', {'form': form})
-                    return redirect('login_user', form=form)
+                    return redirect('login_user')
                 else:
                     form['errors'] = u"Не уникальный юзернейм/почта"
                     return render(request, 'register.html', {'form': form})
@@ -80,7 +82,7 @@ def register_user(request):
 
 
 def login_user(request):
-    if not request.user.is_anonymous:
+    if request.user.is_anonymous:
         if request.method == "POST":
             form = {
                 'username': request.POST["username"],
@@ -108,4 +110,11 @@ def login_user(request):
             return render(request, 'login.html', {})
     else:
         return render(request, 'archive.html', {})
+
+def log_out(request):
+    if not request.user.is_anonymous:
+        logout(request)
+        return redirect('archive', {"posts": Article.objects.all()})
+    else:
+        raise Http404
 # Create your views here.

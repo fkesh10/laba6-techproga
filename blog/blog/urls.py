@@ -19,9 +19,12 @@ from articles import views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('archive/', views.archive, name='archive'),
-    path('articles/<int:article_id>/', views.get_article, name='get_article'),
+    path("admin/", admin.site.urls),
+    path("register/", views.register_user),
+    path("login/", views.login_user),
+  
+    path("archive/", views.archive),
     path("articles/new/", views.create_post),
-    # path(r'^article/(?P<article_id>\d+)$', views.get_article, name='get_article'),
+    path('articles/<int:article_id>/', views.get_article, name='get_article'),
+    path('logout/', views.log_out),
 ]
